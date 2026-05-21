@@ -48,6 +48,17 @@ type Trip = {
   progress: number;
 };
 
+type BoardZone = {
+  key: string;
+  className: string;
+  x: number;
+  y: number;
+  emoji: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+};
+
 const initialVehicles: Vehicle[] = [
   { id: 1, name: 'Самосвал #1', type: 'Самосвал', status: 'trip', fuel: 72, efficiency: 84 },
   { id: 2, name: 'Самосвал #2', type: 'Самосвал', status: 'trip', fuel: 61, efficiency: 79 },
@@ -66,8 +77,8 @@ const initialTasks: Task[] = [
 ];
 
 const baseTrips: Trip[] = [
-  { vehicle: 'Самосвал #1', from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 60 },
-  { vehicle: 'Самосвал #2', from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 30 },
+  { vehicle: 'Самосвал #1', from: 'Котлован', to: 'Главный объект', cargo: 'Грунт', progress: 60 },
+  { vehicle: 'Самосвал #2', from: 'КПП', to: 'Бетонный узел', cargo: 'Материалы', progress: 30 },
   { vehicle: 'Бетономиксер #3', from: 'Бетонный узел', to: 'Главный объект', cargo: 'Бетон', progress: 80 },
   { vehicle: 'Погрузчик #1', from: 'Склад', to: 'Главный объект', cargo: 'Арматура', progress: 50 },
 ];
@@ -88,49 +99,13 @@ const funChart = [
   { zone: 'Кран', points: 72 },
 ];
 
-const mapZones = [
-  {
-    className: 'zone gate-zone',
-    emoji: '🚧',
-    title: 'КПП',
-    subtitle: 'Здесь стартует техника',
-    badge: 'Вход',
-  },
-  {
-    className: 'zone concrete-zone',
-    emoji: '🧱',
-    title: 'Бетонный узел',
-    subtitle: 'Готовит бетон для стройки',
-    badge: 'Ресурсы',
-  },
-  {
-    className: 'zone storage-zone',
-    emoji: '🏗️',
-    title: 'Склад',
-    subtitle: 'Арматура и материалы',
-    badge: 'Запасы',
-  },
-  {
-    className: 'zone object-zone',
-    emoji: '🏢',
-    title: 'Главный объект',
-    subtitle: 'Сюда всё везём',
-    badge: 'Цель',
-  },
-  {
-    className: 'zone pit-zone',
-    emoji: '⛏️',
-    title: 'Котлован',
-    subtitle: 'Самосвалы вывозят грунт',
-    badge: 'Работы',
-  },
-  {
-    className: 'zone repair-zone',
-    emoji: '🔧',
-    title: 'Пит-стоп',
-    subtitle: 'Чиним и возвращаем в игру',
-    badge: 'Сервис',
-  },
+const boardZones: BoardZone[] = [
+  { key: 'gate', className: 'gate-zone', x: 70, y: 220, emoji: '🚧', title: 'КПП', subtitle: 'старт техники', badge: 'Вход' },
+  { key: 'concrete', className: 'concrete-zone', x: 300, y: 130, emoji: '🧱', title: 'Бетонный узел', subtitle: 'делает бетон', badge: 'Ресурсы' },
+  { key: 'storage', className: 'storage-zone', x: 555, y: 130, emoji: '🏗️', title: 'Склад', subtitle: 'материалы', badge: 'Запасы' },
+  { key: 'object', className: 'object-zone', x: 790, y: 245, emoji: '🏢', title: 'Главный объект', subtitle: 'цель уровня', badge: 'Цель' },
+  { key: 'pit', className: 'pit-zone', x: 300, y: 400, emoji: '⛏️', title: 'Котлован', subtitle: 'грунт', badge: 'Работы' },
+  { key: 'repair', className: 'repair-zone', x: 555, y: 400, emoji: '🔧', title: 'Пит-стоп', subtitle: 'ремонт', badge: 'Сервис' },
 ];
 
 function statusLabel(status: VehicleStatus) {
@@ -218,7 +193,7 @@ function App() {
           <div className="brand-mark">TSM</div>
           <div>
             <h1>AtomSiteControl</h1>
-            <span>Корпоративная стройка-игра в более мультяшном стиле</span>
+            <span>Design branch: SVG-карта с нормальными маршрутами</span>
           </div>
         </div>
         <div className="topbar-card level">
@@ -246,7 +221,7 @@ function App() {
       <section className="hero-strip">
         <div>
           <span className="eyebrow">Цель уровня</span>
-          <h2>Запусти технику по понятным маршрутам и построй объект быстрее всех</h2>
+          <h2>Техника теперь движется по SVG-дорогам, а не съезжает с маршрута</h2>
         </div>
         <button onClick={boostBuild} className="primary-action">
           <Sparkles size={18} /> Ускорить стройку
@@ -296,8 +271,8 @@ function App() {
 
           <div className="map-info-bar">
             <div className="map-title-block">
-              <strong>Игровая карта стройки</strong>
-              <span>Крупные зоны, понятные маршруты и анимированная техника</span>
+              <strong>SVG board-map · design v2</strong>
+              <span>Дороги, зоны и техника в одной координатной сетке</span>
             </div>
             <div className="map-legend">
               <LegendItem colorClass="goal" label="Главная цель" />
@@ -306,25 +281,40 @@ function App() {
             </div>
           </div>
 
-          <div className="site-map cartoon-map">
-            <div className="path path-top" />
-            <div className="path path-middle" />
-            <div className="path path-bottom" />
-            <div className="path path-vertical" />
+          <div className="site-map svg-board-map">
+            <svg className="board-svg" viewBox="0 0 1000 600" role="img" aria-label="Карта стройплощадки">
+              <defs>
+                <filter id="roadShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="10" stdDeviation="8" floodColor="#06306e" floodOpacity="0.28" />
+                </filter>
+              </defs>
 
-            <div className="vehicle-runner runner-top">🚚</div>
-            <div className="vehicle-runner runner-middle">🚛</div>
-            <div className="vehicle-runner runner-bottom">🚜</div>
+              <rect x="0" y="0" width="1000" height="600" rx="30" className="sky-bg" />
+              <path d="M 0 210 C 160 170 310 185 475 212 C 650 240 810 210 1000 170 L 1000 600 L 0 600 Z" className="grass-bg" />
+              <circle cx="120" cy="86" r="34" className="sun" />
+              <path d="M 64 116 C 120 74 196 80 232 124" className="cloud" />
+              <path d="M 760 92 C 815 56 895 65 928 110" className="cloud cloud-two" />
 
-            {mapZones.map((zone) => (
-              <ZoneCard
-                key={zone.title}
-                className={zone.className}
-                emoji={zone.emoji}
-                title={zone.title}
-                subtitle={zone.subtitle}
-                badge={zone.badge}
-              />
+              <path id="route-resources" d="M 180 272 C 260 230 340 210 410 210 C 500 210 590 215 670 245 C 725 265 770 288 820 310" className="road-main" />
+              <path d="M 180 272 C 260 230 340 210 410 210 C 500 210 590 215 670 245 C 725 265 770 288 820 310" className="road-marking" />
+
+              <path id="route-pit" d="M 385 455 C 470 430 570 405 655 372 C 720 347 770 328 820 310" className="road-main" />
+              <path d="M 385 455 C 470 430 570 405 655 372 C 720 347 770 328 820 310" className="road-marking" />
+
+              <path id="route-service" d="M 620 455 C 650 420 670 380 690 340 C 710 300 745 290 820 310" className="road-main service-road" />
+              <path d="M 620 455 C 650 420 670 380 690 340 C 710 300 745 290 820 310" className="road-marking" />
+
+              <path id="route-loop" d="M 180 272 C 165 350 210 425 310 455 C 445 496 635 505 820 310" className="road-main loop-road" />
+              <path d="M 180 272 C 165 350 210 425 310 455 C 445 496 635 505 820 310" className="road-marking" />
+            </svg>
+
+            <div className="moving-vehicle truck-resource">🚚</div>
+            <div className="moving-vehicle truck-pit">🚛</div>
+            <div className="moving-vehicle truck-service">🚜</div>
+            <div className="moving-vehicle truck-loop">🚌</div>
+
+            {boardZones.map((zone) => (
+              <ZoneCard key={zone.key} zone={zone} />
             ))}
           </div>
         </section>
@@ -410,26 +400,14 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
   );
 }
 
-function ZoneCard({
-  className,
-  emoji,
-  title,
-  subtitle,
-  badge,
-}: {
-  className: string;
-  emoji: string;
-  title: string;
-  subtitle: string;
-  badge: string;
-}) {
+function ZoneCard({ zone }: { zone: BoardZone }) {
   return (
-    <div className={className}>
-      <div className="zone-emoji">{emoji}</div>
+    <div className={`board-zone ${zone.className}`} style={{ left: zone.x, top: zone.y }}>
+      <div className="zone-emoji">{zone.emoji}</div>
       <div className="zone-content">
-        <span className="zone-badge">{badge}</span>
-        <strong>{title}</strong>
-        <span>{subtitle}</span>
+        <span className="zone-badge">{zone.badge}</span>
+        <strong>{zone.title}</strong>
+        <span>{zone.subtitle}</span>
       </div>
     </div>
   );
