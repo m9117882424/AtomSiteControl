@@ -1,0 +1,423 @@
+/* Mobile and small-screen overrides for the isometric game prototype. */
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 0;
+}
+
+body {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.app-shell {
+  width: 100%;
+  min-height: auto;
+}
+
+@media (max-width: 900px) {
+  body {
+    min-width: 0;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(110, 210, 255, 0.3), transparent 28%),
+      linear-gradient(180deg, #075fbd 0%, #042056 100%);
+  }
+
+  .app-shell {
+    padding: 10px;
+  }
+
+  .game-header {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .brand-card {
+    grid-column: 1 / -1;
+    min-height: 76px;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .brand-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    font-size: 13px;
+  }
+
+  .brand-card h1 {
+    font-size: 20px;
+  }
+
+  .brand-card span {
+    display: block;
+    max-width: 250px;
+    font-size: 12px;
+    line-height: 1.25;
+  }
+
+  .status-card {
+    min-height: 74px;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 18px;
+  }
+
+  .status-card svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .status-card span {
+    font-size: 12px;
+  }
+
+  .status-card strong {
+    font-size: 20px;
+  }
+
+  .game-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .game-stage-card {
+    min-height: auto;
+    border-radius: 22px;
+  }
+
+  .stage-headline {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .stage-headline h2 {
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+  }
+
+  .primary-action,
+  .secondary-action {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .isometric-scene {
+    height: 470px;
+    overflow: hidden;
+  }
+
+  .isometric-scene::before {
+    width: 530px;
+    height: 310px;
+    top: 52%;
+    background-size: 42px 42px;
+  }
+
+  .sun {
+    width: 44px;
+    height: 44px;
+    top: 28px;
+    right: 38px;
+  }
+
+  .cloud {
+    width: 82px;
+    height: 24px;
+  }
+
+  .cloud::before {
+    left: 14px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .cloud::after {
+    left: 40px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .cloud-one {
+    top: 48px;
+    left: 44px;
+  }
+
+  .cloud-two {
+    top: 78px;
+    right: 120px;
+  }
+
+  .stage-zone {
+    width: 100px;
+    min-height: 88px;
+    padding: 8px;
+    border-width: 3px;
+    border-radius: 20px;
+  }
+
+  .stage-zone-emoji {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 4px;
+    border-radius: 14px;
+    font-size: 22px;
+  }
+
+  .stage-zone strong {
+    font-size: 12px;
+  }
+
+  .stage-zone small {
+    font-size: 10px;
+  }
+
+  .zone-gate { left: 28px; top: 246px; }
+  .zone-concrete { left: 122px; top: 146px; }
+  .zone-storage { left: 240px; top: 166px; }
+  .zone-object { right: 30px; top: 250px; }
+  .zone-pit { left: 105px; top: 360px; }
+  .zone-repair { left: auto; right: 95px; top: 370px; }
+
+  .route-lane {
+    height: 30px;
+    box-shadow:
+      inset 0 0 0 5px #5b78b7,
+      0 10px 20px rgba(4, 44, 85, 0.22);
+  }
+
+  .route-lane::after {
+    left: 12px;
+    right: 12px;
+    height: 3px;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.95) 0 12px, transparent 12px 24px);
+  }
+
+  .route-gate-storage {
+    left: 92px;
+    top: 252px;
+    width: 145px;
+    transform: rotate(-27deg);
+  }
+
+  .route-storage-object {
+    left: 242px;
+    top: 232px;
+    width: 165px;
+    transform: rotate(23deg);
+  }
+
+  .route-pit-object {
+    left: 162px;
+    top: 350px;
+    width: 230px;
+    transform: rotate(-17deg);
+  }
+
+  .route-repair-object {
+    left: auto;
+    right: 100px;
+    top: 335px;
+    width: 115px;
+    transform: rotate(-48deg);
+  }
+
+  .mini-vehicle {
+    top: 4px;
+    left: 8px;
+    width: 34px;
+    height: 22px;
+    border-radius: 8px;
+  }
+
+  .mini-vehicle::before {
+    left: 5px;
+    right: 5px;
+    bottom: -4px;
+    height: 6px;
+    background: radial-gradient(circle, #162541 0 3px, transparent 4px) left center / 14px 6px repeat-x;
+  }
+
+  .mini-vehicle::after {
+    right: 4px;
+    top: 4px;
+    width: 10px;
+    height: 8px;
+  }
+
+  .route-gate-storage .mini-vehicle { --drive-distance: 94px; }
+  .route-storage-object .mini-vehicle { --drive-distance: 112px; }
+  .route-pit-object .mini-vehicle { --drive-distance: 175px; }
+  .route-repair-object .mini-vehicle { --drive-distance: 72px; }
+
+  .crane-tower {
+    right: 70px;
+    top: 140px;
+    width: 110px;
+    height: 150px;
+    transform: scale(0.72);
+    transform-origin: top right;
+  }
+
+  .worker {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    font-size: 17px;
+  }
+
+  .worker-one { right: 160px; top: 315px; }
+  .worker-two { left: 230px; top: 310px; }
+
+  .side-panel {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .panel {
+    border-radius: 20px;
+    padding: 12px;
+  }
+
+  .panel h3 {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .mission-card,
+  .machine-row,
+  .event-row {
+    padding: 10px;
+    border-radius: 16px;
+  }
+
+  .mission-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 21px;
+  }
+
+  .mission-title-line strong,
+  .machine-row strong {
+    font-size: 13px;
+  }
+
+  .mission-card p,
+  .machine-row span,
+  .event-row span {
+    font-size: 12px;
+  }
+
+  .machine-row em {
+    font-size: 10px;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-shell {
+    padding: 8px;
+  }
+
+  .game-header {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .brand-card {
+    padding: 10px;
+  }
+
+  .brand-card h1 {
+    font-size: 18px;
+  }
+
+  .brand-card span {
+    max-width: 220px;
+  }
+
+  .status-card {
+    min-height: 68px;
+  }
+
+  .status-card strong {
+    font-size: 18px;
+  }
+
+  .isometric-scene {
+    height: 430px;
+  }
+
+  .stage-headline h2 {
+    font-size: 16px;
+  }
+
+  .zone-gate { left: 22px; top: 232px; }
+  .zone-concrete { left: 104px; top: 140px; }
+  .zone-storage { left: 210px; top: 160px; }
+  .zone-object { right: 20px; top: 238px; }
+  .zone-pit { left: 84px; top: 334px; }
+  .zone-repair { right: 72px; top: 346px; }
+
+  .stage-zone {
+    width: 92px;
+    min-height: 82px;
+  }
+
+  .stage-zone-emoji {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+
+  .route-gate-storage {
+    left: 78px;
+    top: 238px;
+    width: 130px;
+  }
+
+  .route-storage-object {
+    left: 210px;
+    top: 222px;
+    width: 150px;
+  }
+
+  .route-pit-object {
+    left: 136px;
+    top: 326px;
+    width: 210px;
+  }
+
+  .route-repair-object {
+    right: 76px;
+    top: 318px;
+    width: 100px;
+  }
+
+  .route-gate-storage .mini-vehicle { --drive-distance: 82px; }
+  .route-storage-object .mini-vehicle { --drive-distance: 98px; }
+  .route-pit-object .mini-vehicle { --drive-distance: 154px; }
+  .route-repair-object .mini-vehicle { --drive-distance: 58px; }
+
+  .crane-tower {
+    right: 46px;
+    top: 122px;
+    transform: scale(0.58);
+  }
+
+  .worker-one { right: 132px; top: 292px; }
+  .worker-two { left: 198px; top: 288px; }
+}
