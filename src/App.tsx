@@ -1,12 +1,15 @@
 import { useMemo, useState } from 'react';
 import {
   AlertTriangle,
+  Award,
   Building2,
   CircleGauge,
   Construction,
   Fuel,
+  HeartHandshake,
   MapPinned,
   ShieldCheck,
+  Sparkles,
   Truck,
   Wrench,
 } from 'lucide-react';
@@ -39,7 +42,7 @@ type Task = {
   target: number;
   done: number;
   unit: string;
-  color: string;
+  emoji: string;
 };
 
 type Trip = {
@@ -57,45 +60,45 @@ const initialVehicles: Vehicle[] = [
   { id: 4, name: 'Экскаватор #1', type: 'Экскаватор', status: 'working', fuel: 48, efficiency: 91 },
   { id: 5, name: 'Экскаватор #2', type: 'Экскаватор', status: 'free', fuel: 66, efficiency: 76 },
   { id: 6, name: 'АТЗ #1', type: 'Топливозаправщик', status: 'free', fuel: 93, efficiency: 88 },
-  { id: 7, name: 'Автобетоносмеситель #3', type: 'Бетон', status: 'trip', fuel: 55, efficiency: 82 },
+  { id: 7, name: 'Бетономиксер #3', type: 'Бетон', status: 'trip', fuel: 55, efficiency: 82 },
 ];
 
 const initialTasks: Task[] = [
-  { id: 1, title: 'Бетонные работы', target: 300, done: 225, unit: 'м³', color: 'blue' },
-  { id: 2, title: 'Вывоз грунта', target: 40, done: 28, unit: 'рейсов', color: 'amber' },
-  { id: 3, title: 'Арматура', target: 25, done: 18, unit: 'т', color: 'cyan' },
-  { id: 4, title: 'Работа кранов', target: 90, done: 90, unit: '%', color: 'green' },
+  { id: 1, title: 'Залить бетон', target: 300, done: 225, unit: 'м³', emoji: '🧱' },
+  { id: 2, title: 'Вывезти грунт', target: 40, done: 28, unit: 'рейсов', emoji: '🚚' },
+  { id: 3, title: 'Доставить арматуру', target: 25, done: 18, unit: 'т', emoji: '🏗️' },
+  { id: 4, title: 'Поднять настроение команды', target: 100, done: 87, unit: '%', emoji: '💙' },
 ];
 
 const baseTrips: Trip[] = [
   { vehicle: 'Самосвал #1', from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 60 },
   { vehicle: 'Самосвал #2', from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 30 },
-  { vehicle: 'Автобетоносмеситель #3', from: 'Бетонный узел', to: 'Энергоблок №1', cargo: 'Бетон', progress: 80 },
-  { vehicle: 'Погрузчик #1', from: 'Склад арматуры', to: 'Котлован', cargo: 'Арматура', progress: 50 },
+  { vehicle: 'Бетономиксер #3', from: 'Бетонный узел', to: 'Энергоблок', cargo: 'Бетон', progress: 80 },
+  { vehicle: 'Погрузчик #1', from: 'Склад', to: 'Площадка', cargo: 'Арматура', progress: 50 },
 ];
 
-const fuelChart = [
-  { hour: '08', fuel: 390 },
-  { hour: '09', fuel: 520 },
-  { hour: '10', fuel: 480 },
-  { hour: '11', fuel: 610 },
-  { hour: '12', fuel: 560 },
-  { hour: '13', fuel: 690 },
+const scoreChart = [
+  { hour: '08', score: 120 },
+  { hour: '09', score: 260 },
+  { hour: '10', score: 420 },
+  { hour: '11', score: 620 },
+  { hour: '12', score: 840 },
+  { hour: '13', score: 1240 },
 ];
 
-const idleChart = [
-  { zone: 'КПП', idle: 36 },
-  { zone: 'Бетон', idle: 18 },
-  { zone: 'Склад', idle: 22 },
-  { zone: 'Ремонт', idle: 44 },
+const funChart = [
+  { zone: 'КПП', points: 36 },
+  { zone: 'Бетон', points: 58 },
+  { zone: 'Склад', points: 44 },
+  { zone: 'Кран', points: 72 },
 ];
 
 function statusLabel(status: VehicleStatus) {
   const labels: Record<VehicleStatus, string> = {
-    free: 'Свободен',
-    trip: 'В рейсе',
-    working: 'Работает',
-    repair: 'В ремонте',
+    free: 'Готов ехать',
+    trip: 'В пути',
+    working: 'В деле',
+    repair: 'На пит-стопе',
   };
 
   return labels[status];
@@ -105,13 +108,15 @@ function App() {
   const [vehicles, setVehicles] = useState(initialVehicles);
   const [tasks, setTasks] = useState(initialTasks);
   const [trips, setTrips] = useState(baseTrips);
+  const [score, setScore] = useState(1240);
+  const [teamMood, setTeamMood] = useState(87);
   const [events, setEvents] = useState([
-    '11:20 Пошёл дождь: скорость техники -20%',
-    '11:05 На КПП очередь: задержка доставки',
-    '10:47 Самосвал #7 сломался: требуется ремонт',
+    'КПП снова решило стать финальным боссом — очередь +5 машин',
+    'Дождь включил режим “грязевой DLC” — дороги стали сложнее',
+    'Самосвал #7 ушёл на пит-стоп: механики уже в деле',
   ]);
 
-  const planPercent = useMemo(() => {
+  const buildPercent = useMemo(() => {
     const total = tasks.reduce((sum, task) => sum + task.done / task.target, 0);
     return Math.round((total / tasks.length) * 100);
   }, [tasks]);
@@ -120,7 +125,7 @@ function App() {
     const freeVehicle = vehicles.find((vehicle) => vehicle.status === 'free');
 
     if (!freeVehicle) {
-      setEvents((current) => ['Диспетчер: нет свободной техники для нового рейса', ...current]);
+      setEvents((current) => ['Все заняты. Стройка кипит, диспетчер держится.', ...current]);
       return;
     }
 
@@ -132,7 +137,7 @@ function App() {
 
     setTasks((current) =>
       current.map((task) =>
-        task.title === 'Вывоз грунта' ? { ...task, done: Math.min(task.done + 1, task.target) } : task,
+        task.title === 'Вывезти грунт' ? { ...task, done: Math.min(task.done + 1, task.target) } : task,
       ),
     );
 
@@ -141,7 +146,9 @@ function App() {
       ...current,
     ]);
 
-    setEvents((current) => [`Диспетчер: ${freeVehicle.name} назначен на вывоз грунта`, ...current]);
+    setScore((current) => current + 75);
+    setTeamMood((current) => Math.min(current + 1, 100));
+    setEvents((current) => [`${freeVehicle.name} получил миссию. Грунт сам себя не вывезет. +75 очков`, ...current]);
   };
 
   const repairVehicle = () => {
@@ -150,49 +157,70 @@ function App() {
         vehicle.status === 'repair' ? { ...vehicle, status: 'free', fuel: 55, efficiency: 70 } : vehicle,
       ),
     );
-    setEvents((current) => ['Ремонтная зона: Самосвал #7 возвращён в строй', ...current]);
+    setScore((current) => current + 120);
+    setTeamMood((current) => Math.min(current + 3, 100));
+    setEvents((current) => ['Пит-стоп завершён: техника снова в строю. +120 очков', ...current]);
+  };
+
+  const boostBuild = () => {
+    setTasks((current) =>
+      current.map((task) => ({ ...task, done: Math.min(task.done + Math.ceil(task.target * 0.03), task.target) })),
+    );
+    setScore((current) => current + 180);
+    setTeamMood((current) => Math.min(current + 2, 100));
+    setEvents((current) => ['Команда включила турборежим: стройка заметно продвинулась. +180 очков', ...current]);
   };
 
   return (
     <main className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <Building2 size={32} />
+          <div className="brand-mark">TSM</div>
           <div>
             <h1>AtomSiteControl</h1>
-            <span>Симулятор диспетчера строительной техники</span>
+            <span>Корпоративная стройка-игра в синих тонах TSM Enerji</span>
           </div>
         </div>
-        <div className="topbar-card">
-          <span>Смена</span>
-          <strong>2 / День</strong>
+        <div className="topbar-card level">
+          <span>Уровень</span>
+          <strong>1 · Площадка</strong>
         </div>
         <div className="topbar-card">
-          <span>План смены</span>
-          <strong>{planPercent}%</strong>
+          <span>Прогресс стройки</span>
+          <strong>{buildPercent}%</strong>
         </div>
         <div className="topbar-card">
-          <span>Бюджет</span>
-          <strong>12.4 млн ₽</strong>
+          <span>Очки</span>
+          <strong>{score}</strong>
         </div>
         <div className="topbar-card">
-          <span>Топливо</span>
-          <strong>32 780 л</strong>
+          <span>Настроение</span>
+          <strong>{teamMood}%</strong>
         </div>
         <div className="topbar-card success">
           <span>Безопасность</span>
-          <strong>92/100</strong>
+          <strong>Отлично</strong>
         </div>
       </header>
 
+      <section className="hero-strip">
+        <div>
+          <span className="eyebrow">Цель уровня</span>
+          <h2>Помоги команде построить объект и набрать максимум очков</h2>
+        </div>
+        <button onClick={boostBuild} className="primary-action">
+          <Sparkles size={18} /> Ускорить стройку
+        </button>
+      </section>
+
       <section className="workspace">
         <aside className="left-column">
-          <Panel title="Задания смены">
+          <Panel title="Миссии уровня">
             <div className="task-list">
               {tasks.map((task) => (
                 <div className="task" key={task.id}>
                   <div className="task-title">
-                    <Construction size={18} />
+                    <span className="task-emoji">{task.emoji}</span>
                     <strong>{task.title}</strong>
                   </div>
                   <div className="progress-line">
@@ -206,7 +234,7 @@ function App() {
             </div>
           </Panel>
 
-          <Panel title="События">
+          <Panel title="Весёлые события">
             <div className="events">
               {events.slice(0, 5).map((event) => (
                 <div className="event" key={event}>
@@ -220,19 +248,19 @@ function App() {
 
         <section className="map-card">
           <div className="map-toolbar">
-            <button>Карта</button>
+            <button>Стройка</button>
             <button>Техника</button>
-            <button>Задания</button>
-            <button>Аналитика</button>
+            <button>Миссии</button>
+            <button>Рейтинг</button>
           </div>
           <div className="site-map">
-            <Zone className="zone concrete" icon={<Fuel size={22} />} title="Бетонный узел" subtitle="Готовность 82%" />
-            <Zone className="zone storage" icon={<Construction size={22} />} title="Склад арматуры" subtitle="Запас 180 т" />
-            <Zone className="zone block-one" icon={<Building2 size={22} />} title="Энергоблок №1" subtitle="Строительство" />
-            <Zone className="zone pit" icon={<MapPinned size={22} />} title="Котлован" subtitle="Вывоз грунта 28/40" />
-            <Zone className="zone crane" icon={<Construction size={22} />} title="Башенный кран #2" subtitle="Загрузка 85%" />
-            <Zone className="zone gate" icon={<Truck size={22} />} title="КПП" subtitle="Очередь: 6 машин" danger />
-            <Zone className="zone repair" icon={<Wrench size={22} />} title="Ремонтная зона" subtitle="1 машина" />
+            <Zone className="zone concrete" icon={<Fuel size={22} />} title="Бетонный узел" subtitle="Бетон готовит победу" />
+            <Zone className="zone storage" icon={<Construction size={22} />} title="Склад арматуры" subtitle="Запас: ещё строить и строить" />
+            <Zone className="zone block-one" icon={<Building2 size={22} />} title="Главный объект" subtitle="Строительство идёт" />
+            <Zone className="zone pit" icon={<MapPinned size={22} />} title="Котлован" subtitle="Грунт не сдаётся" />
+            <Zone className="zone crane" icon={<Construction size={22} />} title="Кран-босс" subtitle="Поднимает настроение и грузы" />
+            <Zone className="zone gate" icon={<Truck size={22} />} title="КПП" subtitle="Мини-босс: очередь" danger />
+            <Zone className="zone repair" icon={<Wrench size={22} />} title="Пит-стоп" subtitle="Механики колдуют" />
             <div className="road road-one" />
             <div className="road road-two" />
             <div className="truck-dot dot-one" />
@@ -243,7 +271,7 @@ function App() {
       </section>
 
       <section className="bottom-grid">
-        <Panel title={`Техника (${vehicles.length})`}>
+        <Panel title={`Команда техники (${vehicles.length})`}>
           <div className="vehicle-list">
             {vehicles.map((vehicle) => (
               <div className={`vehicle ${vehicle.status}`} key={vehicle.id}>
@@ -254,12 +282,12 @@ function App() {
             ))}
           </div>
           <div className="actions">
-            <button onClick={assignTrip}>Назначить рейс</button>
-            <button onClick={repairVehicle}>Завершить ремонт</button>
+            <button onClick={assignTrip}>Отправить на миссию</button>
+            <button onClick={repairVehicle}>Завершить пит-стоп</button>
           </div>
         </Panel>
 
-        <Panel title="Рейсы">
+        <Panel title="Кто куда поехал">
           <div className="trip-table">
             {trips.slice(0, 5).map((trip) => (
               <div className="trip-row" key={`${trip.vehicle}-${trip.progress}-${trip.to}`}>
@@ -275,34 +303,34 @@ function App() {
           </div>
         </Panel>
 
-        <Panel title="Дашборд смены">
+        <Panel title="Итоги игры">
           <div className="dashboard-grid">
-            <Metric icon={<CircleGauge />} label="Выполнение" value={`${planPercent}%`} />
-            <Metric icon={<Wrench />} label="Простой" value="2 ч 35 мин" />
-            <Metric icon={<Fuel />} label="Расход" value="3 240 л" />
-            <Metric icon={<ShieldCheck />} label="Безопасность" value="92/100" />
+            <Metric icon={<Award />} label="Очки" value={`${score}`} />
+            <Metric icon={<CircleGauge />} label="Темп стройки" value={`${buildPercent}%`} />
+            <Metric icon={<HeartHandshake />} label="Команда" value={`${teamMood}%`} />
+            <Metric icon={<ShieldCheck />} label="Безопасность" value="Отлично" />
           </div>
           <div className="charts">
             <div className="chart-card">
-              <span>Топливо по часам</span>
+              <span>Очки по ходу смены</span>
               <ResponsiveContainer width="100%" height={110}>
-                <LineChart data={fuelChart}>
+                <LineChart data={scoreChart}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="hour" />
                   <YAxis hide />
                   <Tooltip />
-                  <Line type="monotone" dataKey="fuel" strokeWidth={3} dot={false} />
+                  <Line type="monotone" dataKey="score" strokeWidth={3} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <div className="chart-card">
-              <span>Простои по зонам</span>
+              <span>Где набрали очки</span>
               <ResponsiveContainer width="100%" height={110}>
-                <BarChart data={idleChart}>
+                <BarChart data={funChart}>
                   <XAxis dataKey="zone" />
                   <YAxis hide />
                   <Tooltip />
-                  <Bar dataKey="idle" radius={[8, 8, 0, 0]} />
+                  <Bar dataKey="points" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
