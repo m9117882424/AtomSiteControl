@@ -1,6 +1,6 @@
 :root {
-  color: #e8f3ff;
-  background: #08131a;
+  color: #eef8ff;
+  background: #061c3a;
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -14,24 +14,26 @@ body {
   min-width: 1180px;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(34, 132, 197, 0.22), transparent 30%),
-    linear-gradient(135deg, #071017 0%, #0f2029 48%, #071015 100%);
+    radial-gradient(circle at top left, rgba(0, 178, 255, 0.32), transparent 32%),
+    radial-gradient(circle at 75% 5%, rgba(62, 133, 255, 0.28), transparent 30%),
+    linear-gradient(135deg, #06214a 0%, #0b4da2 48%, #04142f 100%);
 }
 
 button {
   border: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 10px 14px;
-  color: #e8f3ff;
-  background: rgba(42, 119, 180, 0.85);
+  color: #f4fbff;
+  background: linear-gradient(135deg, #0797ff, #0754c9);
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 800;
   transition: 0.2s ease;
+  box-shadow: 0 12px 28px rgba(0, 96, 255, 0.26);
 }
 
 button:hover {
   transform: translateY(-1px);
-  background: rgba(58, 148, 216, 0.95);
+  background: linear-gradient(135deg, #19b7ff, #0a66f0);
 }
 
 .app-shell {
@@ -41,7 +43,7 @@ button:hover {
 
 .topbar {
   display: grid;
-  grid-template-columns: 1.6fr repeat(5, 1fr);
+  grid-template-columns: 1.8fr repeat(5, 1fr);
   gap: 12px;
   align-items: stretch;
   margin-bottom: 14px;
@@ -50,11 +52,12 @@ button:hover {
 .brand,
 .topbar-card,
 .panel,
-.map-card {
-  border: 1px solid rgba(152, 211, 255, 0.14);
-  background: rgba(9, 25, 34, 0.82);
-  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.32);
-  backdrop-filter: blur(14px);
+.map-card,
+.hero-strip {
+  border: 1px solid rgba(165, 219, 255, 0.26);
+  background: linear-gradient(180deg, rgba(8, 70, 150, 0.86), rgba(5, 31, 75, 0.88));
+  box-shadow: 0 22px 80px rgba(0, 18, 69, 0.36);
+  backdrop-filter: blur(16px);
 }
 
 .brand {
@@ -62,20 +65,34 @@ button:hover {
   align-items: center;
   gap: 14px;
   padding: 16px;
+  border-radius: 22px;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
   border-radius: 18px;
+  color: #004aad;
+  background: linear-gradient(135deg, #ffffff, #91dbff);
+  font-weight: 950;
+  letter-spacing: -0.04em;
+  box-shadow: 0 12px 30px rgba(105, 208, 255, 0.38);
 }
 
 .brand h1 {
   margin: 0;
-  font-size: 24px;
+  font-size: 25px;
 }
 
 .brand span,
 .topbar-card span,
 .metric span,
 .zone span,
-.task small {
-  color: #9fb7c8;
+.task small,
+.eyebrow {
+  color: #b8ddff;
 }
 
 .topbar-card {
@@ -83,7 +100,7 @@ button:hover {
   flex-direction: column;
   justify-content: center;
   padding: 16px;
-  border-radius: 18px;
+  border-radius: 22px;
 }
 
 .topbar-card strong {
@@ -91,8 +108,46 @@ button:hover {
   font-size: 24px;
 }
 
+.topbar-card.level strong {
+  font-size: 20px;
+}
+
 .topbar-card.success strong {
-  color: #83e891;
+  color: #8ff7d1;
+}
+
+.hero-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  background:
+    linear-gradient(90deg, rgba(3, 72, 169, 0.9), rgba(0, 154, 255, 0.62)),
+    radial-gradient(circle at right, rgba(255, 255, 255, 0.22), transparent 28%);
+}
+
+.hero-strip h2 {
+  margin: 4px 0 0;
+  font-size: 22px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.primary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 190px;
+  justify-content: center;
+  background: linear-gradient(135deg, #00b6ff, #0054d8);
 }
 
 .workspace {
@@ -108,13 +163,13 @@ button:hover {
 }
 
 .panel {
-  border-radius: 18px;
+  border-radius: 22px;
   padding: 16px;
 }
 
 .panel h2 {
   margin: 0 0 14px;
-  color: #d8ebf8;
+  color: #ecf8ff;
   font-size: 15px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -130,6 +185,9 @@ button:hover {
 .task {
   display: grid;
   gap: 8px;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.075);
 }
 
 .task-title {
@@ -138,18 +196,27 @@ button:hover {
   align-items: center;
 }
 
+.task-emoji {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: rgba(155, 221, 255, 0.18);
+}
+
 .progress-line {
   overflow: hidden;
-  height: 9px;
+  height: 10px;
   border-radius: 99px;
-  background: rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .progress-line span {
   display: block;
   height: 100%;
   border-radius: 99px;
-  background: linear-gradient(90deg, #27c47d, #46a8ff);
+  background: linear-gradient(90deg, #67e8ff, #1d7cff, #8ff7d1);
 }
 
 .progress-line.small {
@@ -163,24 +230,25 @@ button:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.055);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.085);
+  border: 1px solid rgba(190, 230, 255, 0.12);
 }
 
 .event {
   padding: 10px;
-  color: #d9e8f2;
+  color: #eef8ff;
 }
 
 .event svg {
-  color: #f5b84c;
+  color: #8ff7d1;
   flex: 0 0 auto;
 }
 
 .map-card {
   overflow: hidden;
   min-height: 650px;
-  border-radius: 22px;
+  border-radius: 26px;
   position: relative;
 }
 
@@ -194,7 +262,7 @@ button:hover {
 }
 
 .map-toolbar button:not(:first-child) {
-  background: rgba(15, 29, 37, 0.9);
+  background: rgba(7, 46, 111, 0.92);
 }
 
 .site-map {
@@ -202,9 +270,9 @@ button:hover {
   height: 650px;
   overflow: hidden;
   background:
-    linear-gradient(25deg, transparent 0 48%, rgba(255, 255, 255, 0.08) 49% 52%, transparent 53%),
-    linear-gradient(145deg, rgba(110, 81, 44, 0.85), rgba(48, 69, 43, 0.92)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 90px);
+    linear-gradient(25deg, transparent 0 48%, rgba(255, 255, 255, 0.1) 49% 52%, transparent 53%),
+    linear-gradient(145deg, rgba(18, 105, 190, 0.78), rgba(12, 62, 144, 0.92)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.055) 0 2px, transparent 2px 90px);
 }
 
 .site-map::before {
@@ -212,8 +280,10 @@ button:hover {
   position: absolute;
   inset: 60px;
   border-radius: 45% 55% 48% 52%;
-  border: 34px solid rgba(76, 57, 37, 0.86);
-  box-shadow: inset 0 0 0 12px rgba(214, 174, 83, 0.1);
+  border: 34px solid rgba(10, 63, 137, 0.88);
+  box-shadow:
+    inset 0 0 0 12px rgba(123, 210, 255, 0.14),
+    0 0 90px rgba(74, 174, 255, 0.18);
   transform: rotate(-8deg);
 }
 
@@ -224,9 +294,9 @@ button:hover {
   top: 70px;
   width: 360px;
   height: 760px;
-  background: rgba(23, 29, 30, 0.72);
+  background: rgba(7, 38, 89, 0.72);
   transform: rotate(20deg);
-  border-left: 12px dashed rgba(255, 255, 255, 0.2);
+  border-left: 12px dashed rgba(177, 227, 255, 0.25);
 }
 
 .zone {
@@ -237,9 +307,14 @@ button:hover {
   align-items: center;
   min-width: 190px;
   padding: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 16px;
-  background: rgba(8, 18, 24, 0.82);
+  border: 1px solid rgba(197, 235, 255, 0.22);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(9, 74, 164, 0.86), rgba(4, 33, 89, 0.86));
+  box-shadow: 0 16px 45px rgba(0, 38, 110, 0.26);
+}
+
+.zone svg {
+  color: #91e8ff;
 }
 
 .zone strong,
@@ -248,7 +323,7 @@ button:hover {
 }
 
 .zone.danger svg {
-  color: #ff6060;
+  color: #ffe36d;
 }
 
 .concrete {
@@ -291,8 +366,8 @@ button:hover {
   z-index: 2;
   height: 30px;
   border-radius: 40px;
-  background: rgba(49, 43, 34, 0.9);
-  border-top: 3px dashed rgba(255, 255, 255, 0.18);
+  background: rgba(3, 32, 82, 0.92);
+  border-top: 3px dashed rgba(185, 232, 255, 0.32);
 }
 
 .road-one {
@@ -315,8 +390,10 @@ button:hover {
   width: 22px;
   height: 14px;
   border-radius: 5px;
-  background: #f8b534;
-  box-shadow: 0 0 0 4px rgba(248, 181, 52, 0.18);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.18),
+    0 0 24px rgba(99, 222, 255, 0.8);
 }
 
 .dot-one {
@@ -355,15 +432,15 @@ button:hover {
 
 .vehicle.free strong,
 .vehicle.working strong {
-  color: #83e891;
+  color: #8ff7d1;
 }
 
 .vehicle.trip strong {
-  color: #f4c35f;
+  color: #91e8ff;
 }
 
 .vehicle.repair strong {
-  color: #ff7575;
+  color: #ffe36d;
 }
 
 .actions {
@@ -396,7 +473,7 @@ button:hover {
 }
 
 .metric svg {
-  color: #6bc4ff;
+  color: #91e8ff;
 }
 
 .metric strong {
@@ -411,14 +488,15 @@ button:hover {
 }
 
 .chart-card {
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 10px;
-  background: rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(190, 230, 255, 0.12);
 }
 
 .chart-card > span {
   display: block;
   margin-bottom: 8px;
-  color: #b7cddd;
+  color: #c9e9ff;
   font-size: 13px;
 }
