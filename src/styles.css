@@ -1,0 +1,424 @@
+:root {
+  color: #e8f3ff;
+  background: #08131a;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 1180px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(34, 132, 197, 0.22), transparent 30%),
+    linear-gradient(135deg, #071017 0%, #0f2029 48%, #071015 100%);
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  color: #e8f3ff;
+  background: rgba(42, 119, 180, 0.85);
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  background: rgba(58, 148, 216, 0.95);
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding: 14px;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: 1.6fr repeat(5, 1fr);
+  gap: 12px;
+  align-items: stretch;
+  margin-bottom: 14px;
+}
+
+.brand,
+.topbar-card,
+.panel,
+.map-card {
+  border: 1px solid rgba(152, 211, 255, 0.14);
+  background: rgba(9, 25, 34, 0.82);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(14px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.brand span,
+.topbar-card span,
+.metric span,
+.zone span,
+.task small {
+  color: #9fb7c8;
+}
+
+.topbar-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 18px;
+}
+
+.topbar-card strong {
+  margin-top: 8px;
+  font-size: 24px;
+}
+
+.topbar-card.success strong {
+  color: #83e891;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 14px;
+}
+
+.left-column {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.panel {
+  border-radius: 18px;
+  padding: 16px;
+}
+
+.panel h2 {
+  margin: 0 0 14px;
+  color: #d8ebf8;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.task-list,
+.events,
+.vehicle-list {
+  display: grid;
+  gap: 12px;
+}
+
+.task {
+  display: grid;
+  gap: 8px;
+}
+
+.task-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.progress-line {
+  overflow: hidden;
+  height: 9px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.progress-line span {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #27c47d, #46a8ff);
+}
+
+.progress-line.small {
+  width: 110px;
+}
+
+.event,
+.vehicle,
+.trip-row,
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.event {
+  padding: 10px;
+  color: #d9e8f2;
+}
+
+.event svg {
+  color: #f5b84c;
+  flex: 0 0 auto;
+}
+
+.map-card {
+  overflow: hidden;
+  min-height: 650px;
+  border-radius: 22px;
+  position: relative;
+}
+
+.map-toolbar {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+}
+
+.map-toolbar button:not(:first-child) {
+  background: rgba(15, 29, 37, 0.9);
+}
+
+.site-map {
+  position: relative;
+  height: 650px;
+  overflow: hidden;
+  background:
+    linear-gradient(25deg, transparent 0 48%, rgba(255, 255, 255, 0.08) 49% 52%, transparent 53%),
+    linear-gradient(145deg, rgba(110, 81, 44, 0.85), rgba(48, 69, 43, 0.92)),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 90px);
+}
+
+.site-map::before {
+  content: "";
+  position: absolute;
+  inset: 60px;
+  border-radius: 45% 55% 48% 52%;
+  border: 34px solid rgba(76, 57, 37, 0.86);
+  box-shadow: inset 0 0 0 12px rgba(214, 174, 83, 0.1);
+  transform: rotate(-8deg);
+}
+
+.site-map::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: 70px;
+  width: 360px;
+  height: 760px;
+  background: rgba(23, 29, 30, 0.72);
+  transform: rotate(20deg);
+  border-left: 12px dashed rgba(255, 255, 255, 0.2);
+}
+
+.zone {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 190px;
+  padding: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(8, 18, 24, 0.82);
+}
+
+.zone strong,
+.zone span {
+  display: block;
+}
+
+.zone.danger svg {
+  color: #ff6060;
+}
+
+.concrete {
+  left: 100px;
+  top: 100px;
+}
+
+.storage {
+  left: 380px;
+  top: 128px;
+}
+
+.block-one {
+  right: 260px;
+  top: 90px;
+}
+
+.pit {
+  left: 560px;
+  top: 265px;
+}
+
+.crane {
+  left: 420px;
+  top: 390px;
+}
+
+.gate {
+  right: 135px;
+  top: 360px;
+}
+
+.repair {
+  left: 480px;
+  bottom: 82px;
+}
+
+.road {
+  position: absolute;
+  z-index: 2;
+  height: 30px;
+  border-radius: 40px;
+  background: rgba(49, 43, 34, 0.9);
+  border-top: 3px dashed rgba(255, 255, 255, 0.18);
+}
+
+.road-one {
+  left: 80px;
+  top: 330px;
+  width: 760px;
+  transform: rotate(-9deg);
+}
+
+.road-two {
+  right: 90px;
+  top: 430px;
+  width: 690px;
+  transform: rotate(11deg);
+}
+
+.truck-dot {
+  position: absolute;
+  z-index: 4;
+  width: 22px;
+  height: 14px;
+  border-radius: 5px;
+  background: #f8b534;
+  box-shadow: 0 0 0 4px rgba(248, 181, 52, 0.18);
+}
+
+.dot-one {
+  left: 350px;
+  top: 330px;
+}
+
+.dot-two {
+  left: 680px;
+  top: 410px;
+}
+
+.dot-three {
+  right: 230px;
+  top: 510px;
+}
+
+.bottom-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 560px;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.vehicle {
+  padding: 10px;
+}
+
+.vehicle span {
+  flex: 1;
+}
+
+.vehicle strong {
+  font-size: 13px;
+}
+
+.vehicle.free strong,
+.vehicle.working strong {
+  color: #83e891;
+}
+
+.vehicle.trip strong {
+  color: #f4c35f;
+}
+
+.vehicle.repair strong {
+  color: #ff7575;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.trip-table {
+  display: grid;
+  gap: 8px;
+}
+
+.trip-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 120px;
+  padding: 10px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.metric {
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px;
+}
+
+.metric svg {
+  color: #6bc4ff;
+}
+
+.metric strong {
+  font-size: 18px;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.chart-card {
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.chart-card > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #b7cddd;
+  font-size: 13px;
+}
