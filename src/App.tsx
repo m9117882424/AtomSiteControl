@@ -2,16 +2,11 @@ import { useMemo, useState } from 'react';
 import {
   AlertTriangle,
   Award,
-  Building2,
   CircleGauge,
-  Construction,
-  Fuel,
   HeartHandshake,
-  MapPinned,
   ShieldCheck,
   Sparkles,
   Truck,
-  Wrench,
 } from 'lucide-react';
 import {
   Bar,
@@ -73,8 +68,8 @@ const initialTasks: Task[] = [
 const baseTrips: Trip[] = [
   { vehicle: 'Самосвал #1', from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 60 },
   { vehicle: 'Самосвал #2', from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 30 },
-  { vehicle: 'Бетономиксер #3', from: 'Бетонный узел', to: 'Энергоблок', cargo: 'Бетон', progress: 80 },
-  { vehicle: 'Погрузчик #1', from: 'Склад', to: 'Площадка', cargo: 'Арматура', progress: 50 },
+  { vehicle: 'Бетономиксер #3', from: 'Бетонный узел', to: 'Главный объект', cargo: 'Бетон', progress: 80 },
+  { vehicle: 'Погрузчик #1', from: 'Склад', to: 'Главный объект', cargo: 'Арматура', progress: 50 },
 ];
 
 const scoreChart = [
@@ -91,6 +86,51 @@ const funChart = [
   { zone: 'Бетон', points: 58 },
   { zone: 'Склад', points: 44 },
   { zone: 'Кран', points: 72 },
+];
+
+const mapZones = [
+  {
+    className: 'zone gate-zone',
+    emoji: '🚧',
+    title: 'КПП',
+    subtitle: 'Здесь стартует техника',
+    badge: 'Вход',
+  },
+  {
+    className: 'zone concrete-zone',
+    emoji: '🧱',
+    title: 'Бетонный узел',
+    subtitle: 'Готовит бетон для стройки',
+    badge: 'Ресурсы',
+  },
+  {
+    className: 'zone storage-zone',
+    emoji: '🏗️',
+    title: 'Склад',
+    subtitle: 'Арматура и материалы',
+    badge: 'Запасы',
+  },
+  {
+    className: 'zone object-zone',
+    emoji: '🏢',
+    title: 'Главный объект',
+    subtitle: 'Сюда всё везём',
+    badge: 'Цель',
+  },
+  {
+    className: 'zone pit-zone',
+    emoji: '⛏️',
+    title: 'Котлован',
+    subtitle: 'Самосвалы вывозят грунт',
+    badge: 'Работы',
+  },
+  {
+    className: 'zone repair-zone',
+    emoji: '🔧',
+    title: 'Пит-стоп',
+    subtitle: 'Чиним и возвращаем в игру',
+    badge: 'Сервис',
+  },
 ];
 
 function statusLabel(status: VehicleStatus) {
@@ -142,13 +182,13 @@ function App() {
     );
 
     setTrips((current) => [
-      { vehicle: freeVehicle.name, from: 'Котлован', to: 'Отвал', cargo: 'Грунт', progress: 5 },
+      { vehicle: freeVehicle.name, from: 'Котлован', to: 'Главный объект', cargo: 'Материалы', progress: 5 },
       ...current,
     ]);
 
     setScore((current) => current + 75);
     setTeamMood((current) => Math.min(current + 1, 100));
-    setEvents((current) => [`${freeVehicle.name} получил миссию. Грунт сам себя не вывезет. +75 очков`, ...current]);
+    setEvents((current) => [`${freeVehicle.name} получил миссию. Техника поехала — очки пошли. +75`, ...current]);
   };
 
   const repairVehicle = () => {
@@ -178,7 +218,7 @@ function App() {
           <div className="brand-mark">TSM</div>
           <div>
             <h1>AtomSiteControl</h1>
-            <span>Корпоративная стройка-игра в синих тонах TSM Enerji</span>
+            <span>Корпоративная стройка-игра в более мультяшном стиле</span>
           </div>
         </div>
         <div className="topbar-card level">
@@ -206,7 +246,7 @@ function App() {
       <section className="hero-strip">
         <div>
           <span className="eyebrow">Цель уровня</span>
-          <h2>Помоги команде построить объект и набрать максимум очков</h2>
+          <h2>Запусти технику по понятным маршрутам и построй объект быстрее всех</h2>
         </div>
         <button onClick={boostBuild} className="primary-action">
           <Sparkles size={18} /> Ускорить стройку
@@ -253,19 +293,39 @@ function App() {
             <button>Миссии</button>
             <button>Рейтинг</button>
           </div>
-          <div className="site-map">
-            <Zone className="zone concrete" icon={<Fuel size={22} />} title="Бетонный узел" subtitle="Бетон готовит победу" />
-            <Zone className="zone storage" icon={<Construction size={22} />} title="Склад арматуры" subtitle="Запас: ещё строить и строить" />
-            <Zone className="zone block-one" icon={<Building2 size={22} />} title="Главный объект" subtitle="Строительство идёт" />
-            <Zone className="zone pit" icon={<MapPinned size={22} />} title="Котлован" subtitle="Грунт не сдаётся" />
-            <Zone className="zone crane" icon={<Construction size={22} />} title="Кран-босс" subtitle="Поднимает настроение и грузы" />
-            <Zone className="zone gate" icon={<Truck size={22} />} title="КПП" subtitle="Мини-босс: очередь" danger />
-            <Zone className="zone repair" icon={<Wrench size={22} />} title="Пит-стоп" subtitle="Механики колдуют" />
-            <div className="road road-one" />
-            <div className="road road-two" />
-            <div className="truck-dot dot-one" />
-            <div className="truck-dot dot-two" />
-            <div className="truck-dot dot-three" />
+
+          <div className="map-info-bar">
+            <div className="map-title-block">
+              <strong>Игровая карта стройки</strong>
+              <span>Крупные зоны, понятные маршруты и анимированная техника</span>
+            </div>
+            <div className="map-legend">
+              <LegendItem colorClass="goal" label="Главная цель" />
+              <LegendItem colorClass="resource" label="Ресурсы" />
+              <LegendItem colorClass="service" label="Сервис" />
+            </div>
+          </div>
+
+          <div className="site-map cartoon-map">
+            <div className="path path-top" />
+            <div className="path path-middle" />
+            <div className="path path-bottom" />
+            <div className="path path-vertical" />
+
+            <div className="vehicle-runner runner-top">🚚</div>
+            <div className="vehicle-runner runner-middle">🚛</div>
+            <div className="vehicle-runner runner-bottom">🚜</div>
+
+            {mapZones.map((zone) => (
+              <ZoneCard
+                key={zone.title}
+                className={zone.className}
+                emoji={zone.emoji}
+                title={zone.title}
+                subtitle={zone.subtitle}
+                badge={zone.badge}
+              />
+            ))}
           </div>
         </section>
       </section>
@@ -350,23 +410,24 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
   );
 }
 
-function Zone({
+function ZoneCard({
   className,
-  icon,
+  emoji,
   title,
   subtitle,
-  danger,
+  badge,
 }: {
   className: string;
-  icon: React.ReactNode;
+  emoji: string;
   title: string;
   subtitle: string;
-  danger?: boolean;
+  badge: string;
 }) {
   return (
-    <div className={`${className} ${danger ? 'danger' : ''}`}>
-      {icon}
-      <div>
+    <div className={className}>
+      <div className="zone-emoji">{emoji}</div>
+      <div className="zone-content">
+        <span className="zone-badge">{badge}</span>
         <strong>{title}</strong>
         <span>{subtitle}</span>
       </div>
@@ -380,6 +441,15 @@ function Metric({ icon, label, value }: { icon: React.ReactNode; label: string; 
       {icon}
       <span>{label}</span>
       <strong>{value}</strong>
+    </div>
+  );
+}
+
+function LegendItem({ colorClass, label }: { colorClass: string; label: string }) {
+  return (
+    <div className="legend-item">
+      <span className={`legend-dot ${colorClass}`} />
+      <span>{label}</span>
     </div>
   );
 }
